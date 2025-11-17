@@ -1,5 +1,6 @@
 plugins {
-    `java-gradle-plugin`
+    id("dev.buildlogic.java.library")
+    id("maven-publish")
 }
 
 repositories {
@@ -30,3 +31,15 @@ gradlePlugin {
     }
 }
 
+publishing {
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = "https://maven.pkg.github.com/buildlogic-dev/gradle-plugin-settings-autoinclude/"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
