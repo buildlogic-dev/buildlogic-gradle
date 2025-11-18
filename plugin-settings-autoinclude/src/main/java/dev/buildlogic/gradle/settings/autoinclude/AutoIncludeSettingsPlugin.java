@@ -36,6 +36,8 @@ public final class AutoIncludeSettingsPlugin implements Plugin<Settings> {
     private static final String BUILD_GRADLE = "build.gradle";
     private static final String BUILD_GRADLE_KTS = "build.gradle.kts";
     private static final String NO_BUILD_MARKER = ".nobuild";
+    private static final String BUILD_DIR_NAME = "build";
+    private static final String DOT_GRADLE_DIR_NAME = ".gradle";
 
     /**
      * Registers the {@link AutoIncludeSettingsExtension} and schedules project discovery to run as
@@ -70,6 +72,9 @@ public final class AutoIncludeSettingsPlugin implements Plugin<Settings> {
                     .filter(path -> !path.equals(rootPath))
                     .filter(path -> !startsWith(path, buildSrcPath))
                     .filter(path -> configuredExcludes.stream().noneMatch(ex -> path.startsWith(ex)))
+                    // Ignore any directory inside a `build` or `.gradle` subtree when the
+                    // directory also contains a build script (commonly generated artifacts).
+                    .filter(path -> !(isInIgnoredSubdirectory(rootPath, path) && hasBuildScript(path)))
                     .filter(path -> hasBuildScript(path) && !hasNoBuildMarker(path))
                     .map(path -> toGradlePath(rootPath, path))
                     .sorted(Comparator.naturalOrder())
@@ -112,6 +117,25 @@ public final class AutoIncludeSettingsPlugin implements Plugin<Settings> {
      */
     private static boolean startsWith(Path candidate, Path prefix) {
         return Files.exists(prefix) && candidate.startsWith(prefix);
+    }
+
+    /**
+     * Determines whether the candidate directory lives under a path segment named "build" or
+     * ".gradle" relative to the provided root path.
+     *
+     * @param rootPath repository root
+     * @param candidate directory under evaluation
+     * @return {@code true} if the candidate is located within an ignored subtree
+     */
+    private static boolean isInIgnoredSubdirectory(Path rootPath, Path candidate) {
+        Path relative = rootPath.relativize(candidate);
+        for (int i = 0; i < relative.getNameCount(); i++) {
+            String segment = relative.getName(i).toString();
+            if (BUILD_DIR_NAME.equals(segment) || DOT_GRADLE_DIR_NAME.equals(segment)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

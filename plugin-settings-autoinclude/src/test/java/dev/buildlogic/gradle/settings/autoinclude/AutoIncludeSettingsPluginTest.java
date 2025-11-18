@@ -150,4 +150,33 @@ public class AutoIncludeSettingsPluginTest {
         assertTrue(output.contains("Project ':a'"));
         assertTrue(!output.contains("Project ':b'"));
     }
+
+    /**
+     * Confirms that directories located within generated subtrees such as {@code build/} are not
+     * auto-included even if they contain build scripts.
+     */
+    @Test
+    public void ignoresBuildSubdirectoriesWithBuildScripts() throws IOException {
+        Path legit = testProjectDir.resolve("app");
+        Path generated = testProjectDir.resolve("build/generated");
+        Files.createDirectories(legit);
+        Files.createDirectories(generated);
+        Files.writeString(legit.resolve("build.gradle"), "");
+        Files.writeString(generated.resolve("build.gradle"), "");
+
+        String pluginIncludePath = new File(System.getProperty("user.dir")).getAbsolutePath().replace("\\", "/");
+        String settings = "pluginManagement { includeBuild('" + pluginIncludePath + "') }\nplugins { id('dev.buildlogic.settings.autoinclude') }\n";
+        Files.writeString(testProjectDir.resolve("settings.gradle"), settings);
+        Files.writeString(testProjectDir.resolve("build.gradle"), "");
+
+        BuildResult result = GradleRunner.create()
+            .withProjectDir(testProjectDir.toFile())
+            .withArguments("projects", "--stacktrace")
+            .withPluginClasspath()
+            .build();
+
+        String output = result.getOutput();
+        assertTrue(output.contains("Project ':app'"));
+        assertTrue(!output.contains("Project ':build:generated'"));
+    }
 }
