@@ -35,7 +35,7 @@ publishing {
     repositories {
         maven {
             name = "GithubPackages"
-            url = uri("https://maven.pkg.github.com/buildlogic-dev/gradle-plugin-settings-autoinclude/")
+            url = uri("https://maven.pkg.github.com/buildlogic-dev/buildlogic-gradle/")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
