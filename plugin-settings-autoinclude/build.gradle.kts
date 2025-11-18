@@ -40,7 +40,7 @@ gradlePlugin {
 publishing {
     publications {
         create<MavenPublication>("gpr") {
-            groupId = project.version.toString().startsWith("develop")? "dev.buildlogic.gradle.prerelease" : "dev.buildlogic.gradle"
+            groupId = if(project.version.toString().startsWith("develop")) "dev.buildlogic.gradle.prerelease" else "dev.buildlogic.gradle"
             artifactId = "plugin-settings-autoinclude"
             version = project.version.toString()
 
