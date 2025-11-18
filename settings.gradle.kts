@@ -29,11 +29,28 @@ fun Path.toGradleProjectPath(root: Path): String {
     return ":$relative"
 }
 
+/**
+ * Returns true when this path is located within a directory segment named "build" or ".gradle"
+ * relative to the provided [root]. Used to skip generated output directories that may by
+ * coincidence contain files named like build scripts.
+ */
+fun Path.isInIgnoredSubdirectory(root: Path): Boolean {
+    val rel = root.relativize(this)
+    for (i in 0 until rel.nameCount) {
+        val seg = rel.getName(i).toString()
+        if (seg == "build" || seg == ".gradle") return true
+    }
+    return false
+}
+
 Files.walk(rootPath).use { paths ->
     paths
         .filter { Files.isDirectory(it) }
         .filter { it != rootPath } 
         .filter { candidate -> excludedRoots.none { candidate.startsWith(it) } }
+        // Ignore any directory that is inside a `build` or `.gradle` subtree when that
+        // directory also contains a build script (these are commonly generated directories).
+        .filter { candidate -> !(candidate.isInIgnoredSubdirectory(rootPath) && candidate.hasBuildScript()) }
         .filter { candidate -> candidate.hasBuildScript() && !candidate.hasNoBuildMarker() }
         .map { it.toGradleProjectPath(rootPath) }
         .sorted()
