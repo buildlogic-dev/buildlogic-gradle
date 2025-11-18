@@ -23,7 +23,7 @@ jobs:
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Deploy PreRelease Buildlogic Settings Auto-Include Plugin
-        run: ./gradlew :plugin-settings-autoinclude:publish --stacktrace
+        run: ./gradlew :plugin-settings-autoinclude:publishGprPublicationToGithubPackagesRepository --stacktrace
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
