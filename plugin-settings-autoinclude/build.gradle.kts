@@ -19,7 +19,7 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    systemProperty("org.gradle.testkit.dir", "$buildDir/test-kit")
+    systemProperty("org.gradle.testkit.dir", layout.buildDirectory.dir("test-kit").get().asFile)
 }
 
 gradlePlugin {
