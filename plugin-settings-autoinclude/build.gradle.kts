@@ -32,6 +32,15 @@ gradlePlugin {
 }
 
 publishing {
+    publications {
+        create<MavenPublication>("pluginMaven") {
+            groupId = "dev.buildlogic.gradle"
+            artifactId = "plugin-settings-autoinclude"
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+    }
     repositories {
         maven {
             name = "GithubPackages"
