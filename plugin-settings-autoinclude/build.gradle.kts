@@ -33,12 +33,35 @@ gradlePlugin {
 
 publishing {
     publications {
-        create<MavenPublication>("pluginMaven") {
+        create<MavenPublication>("mavenJava") {
             groupId = "dev.buildlogic.gradle"
             artifactId = "plugin-settings-autoinclude"
             version = project.version.toString()
 
             from(components["java"])
+
+            pom {
+                name = "Gradle Plugin Settings Auto-Include"
+                description = "A Gradle plugin that automatically includes subprojects based on directory structure and markers."
+                url = "https://github.com/buildlogic-dev/buildlogic-gradle"
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "nathanclayton"
+                        name = "Nathan Clayton"
+                        email = "nathanclayton@gmail.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:github.com/buildlogic-dev/buildlogic-gradle.git"
+                    developerConnection = "scm:git:ssh://github.com/buildlogic-dev/buildlogic-gradle.git"
+                    url = "https://github.com/buildlogic-dev/buildlogic-gradle"
+            }
         }
     }
     repositories {
