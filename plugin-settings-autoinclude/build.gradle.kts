@@ -19,7 +19,13 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    systemProperty("org.gradle.testkit.dir", layout.buildDirectory.dir("test-kit").get().asFile)
+    systemProperty(
+        "org.gradle.testkit.dir",
+        layout.buildDirectory
+            .dir("test-kit")
+            .get()
+            .asFile,
+    )
 }
 
 gradlePlugin {
@@ -61,6 +67,7 @@ publishing {
                     connection = "scm:git:github.com/buildlogic-dev/buildlogic-gradle.git"
                     developerConnection = "scm:git:ssh://github.com/buildlogic-dev/buildlogic-gradle.git"
                     url = "https://github.com/buildlogic-dev/buildlogic-gradle"
+                }
             }
         }
     }
