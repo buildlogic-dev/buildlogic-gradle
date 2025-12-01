@@ -1,10 +1,15 @@
-name: publish-setting-autoinclude-prerelease
+name: publish-settings-gitinfo
 on:
-  push:
-    branches:
-      - main
-      - develop
-
+  # push:
+  #   branches:
+  #     - main
+  #     - develop
+  #   paths:
+  #     - plugin-settings-gitinfo/**
+  #     - .github/workflows/publish-settings-gitinfo.yml
+  #     - build.gradle.kts
+  #     - settings.gradle.kts
+  #     - gradle/libs.versions.toml
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -22,8 +27,8 @@ jobs:
           cache: gradle
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v5
-      - name: Deploy PreRelease Buildlogic Settings Auto-Include Plugin
-        run: ./gradlew :plugin-settings-autoinclude:publishGprPublicationToGithubPackagesRepository --stacktrace
+      - name: Deploy Buildlogic Settings GitInfo Plugin
+        run: ./gradlew :plugin-settings-gitinfo:publishGprPublicationToGithubPackagesRepository --stacktrace
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
