@@ -8,11 +8,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.junit.jupiter:junit-jupiter-params")
-    testImplementation("org.junit.platform:junit-platform-launcher:1.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    api(libs.jspecify)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.junit.platform.launcher)
+    testImplementation(libs.junit.jupiter.engine)
 
     testImplementation(gradleTestKit())
 }
@@ -40,7 +42,7 @@ gradlePlugin {
 publishing {
     publications {
         create<MavenPublication>("gpr") {
-            groupId = if(rootProject.extra["GIT_BRANCH"]!!.equals("main")) "dev.buildlogic.gradle" else "dev.buildlogic.gradle.prerelease"
+            groupId = if (rootProject.extra["GIT_BRANCH"]!!.equals("main")) "dev.buildlogic.gradle" else "dev.buildlogic.gradle.prerelease"
             artifactId = "plugin-settings-autoinclude"
             version = project.version.toString()
 
