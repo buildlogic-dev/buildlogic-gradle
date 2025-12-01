@@ -17,6 +17,7 @@ package dev.buildlogic.gradle.settings.autoinclude;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Declarative configuration exposed to {@code settings.gradle(.kts)} callers for the
@@ -42,7 +43,7 @@ public class AutoIncludeSettingsExtension {
      *
      * @param excludedDirectories directories to skip during discovery
      */
-    public void setExcludedDirectories(List<String> excludedDirectories) {
+    public void setExcludedDirectories(@Nullable List<String> excludedDirectories) {
         this.excludedDirectories = excludedDirectories == null ? new ArrayList<>() : excludedDirectories;
     }
 }
